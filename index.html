@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="content-type"  content="text/html;charset=UTF-8" />
+  <title>jQuery Peek</title>
+  <style>
+  html,body{margin:0;padding:0;}
+  .outer_container{text-align:center;}
+  .inner_container{margin:0 auto;text-align:left;width:960px;}
+  
+  </style>
+  <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.js"></script>
+  <script type="text/javascript" src="jquery.peek.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function( event ) {
+      $(".show_example1").click(function( event ) {
+        event.preventDefault();
+        $("#example1").toggle();
+      });
+      $(".get_height1").click(function( event ) {
+        event.preventDefault();
+        alert($("#inside_example1").width());
+      });
+      $(".get_peekheight1").click(function( event ) {
+        event.preventDefault();
+        alert($("#inside_example1").peek("width"));
+      });
+    });
+  </script>
+</head>
+<body>
+<div class="outer_container">
+  <div class="inner_container">
+    <h1>jQuery Peek</h1>
+    
+    <p>
+      I often have hidden elements on a page for which I want to do calculations. For example, maybe I have a 
+      dropdown menu with dynamically sized vertical separators. I'd really like to do something like:
+    </p>
+    <pre>$(".separator").height($(".dropdown_menu").height());</pre>
+    <p>
+      But it doesn't work! The issue, of course, is that the dropdown menu is hidden, so calling height() on it 
+      returns 0.<br/> We need a way to get its height as if it was visible.
+    </p>
+    <p>Introducing jQuery-Peek, which tries to make doing that both flexible and easy.</p>
+    
+    <h2>Here's what I'm talking about</h2>
+    
+    <a href="#" class="show_example1">Toggle the example's visibility</a>
+    <a href="#" class="get_height1">Get the example's width</a>
+    <a href="#" class="get_peekheight1">Get the example's width using peek</a>
+    <div id="example1" style="height:1.4em;">
+      <div id="inside_example1">
+        This is a test
+      </div>
+    </div>
+    
+    <div style="margin-top:1em;">
+      The normal code to get the width fails when the container is hidden:
+      <pre>$("#inside_example1").width()</pre>
+      
+      But this works nicely:
+      <pre>$("#inside_example1").peek("width")</pre>
+      
+      If I needed a more complex value, perhaps depending on a conditional, I could have done something like this:
+      <pre>$("#inside_example1").peek(function() { return atMaxWidth ? 100 : $(this).width(); })</pre>
+    </div>
+    
+    <h2>Peek works even when the target is INSIDE a hidden element</h2>
+    <p>
+      Ever try initializing a custom widget in a hidden div?<br/>
+      If you were basing its size or position off an existing element, you'd be in trouble.<br/>
+      So avoid the issue. Wrap your initialization in peek instead of each.
+    </p>
+    
+    <pre>
+$.fn.myjqueryplugin = function() {
+  return $(this).peek(function() {
+    // initialization logic here...
+  });
+};
+    </pre>
+  </div>
+</div>
+</body>
+</html>
